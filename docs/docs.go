@@ -509,6 +509,9 @@ var doc = `{
                         }
                     }
                 },
+                "created_at": {
+                    "type": "integer"
+                },
                 "created_by_email": {
                     "type": "string"
                 },

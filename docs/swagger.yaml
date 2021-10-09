@@ -76,6 +76,8 @@ definitions:
               type: string
           type: object
         type: array
+      created_at:
+        type: integer
       created_by_email:
         type: string
       created_by_id:

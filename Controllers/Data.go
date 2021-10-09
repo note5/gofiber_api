@@ -2,11 +2,13 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/gofiber/fiber/v2"
-	"go.mongodb.org/mongo-driver/bson"
 	"teleops/config"
 	"teleops/models"
 	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson"
+
 	// 	"go.mongodb.org/mongo-driver/bson/primitive"
 	// 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -66,8 +68,6 @@ func GetAllData(c *fiber.Ctx) error {
 			"error":   err,
 		})
 	}
-	//get end_date
-	// fmt.Print(startDate, "===================== ", endDate)
 	query := bson.M{
 		"datetime": bson.M{
 			"$gt": startDate,
@@ -96,18 +96,51 @@ func GetAllData(c *fiber.Ctx) error {
 
 	fmt.Println("Length Data , ", len(data) > 0)
 
+	//if we have data
 	if len(data) > 0 {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
 			"success": true,
 			"results": data,
 		})
 	}
-	//query
+	return GetLimitedData(c)
+
+}
+
+//Get data by more params like datetime range and id or device_alias
+
+func GetDataByParams(c *fiber.Ctx) error {
+	dataCollection := config.MI.DB.Collection("data")
 	options := options.Find()
-	query = bson.M{}
+
 	options.SetSort(bson.D{{"datetime", -1}})
-	options.SetLimit(4)
-	cursor, err = dataCollection.Find(c.Context(), query,options)
+	startDate, err := time.Parse(time.RFC3339, c.Query("start_date")) //get start_date
+	if err != nil {
+		fmt.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Error parsing Start Date",
+			"error":   err,
+		})
+	}
+	endDate, err := time.Parse(time.RFC3339, c.Query("end_date"))
+	if err != nil {
+		fmt.Println(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Error parsing End Date",
+			"error":   err,
+		})
+	}
+	aliases := []string {"000","111"}
+	query := bson.M{
+        "datetime": bson.M{
+            "$gt": startDate,
+            "$lt": endDate,
+        },
+        "device_alias":bson.M{"$in": aliases},
+    }
+	cursor, err := dataCollection.Find(c.Context(), query)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"success": false,
@@ -115,6 +148,39 @@ func GetAllData(c *fiber.Ctx) error {
 			"error":   err.Error(),
 		})
 	}
+	var data []models.Data = make([]models.Data, 0)
+
+	// iterate the cursor and decode each item into a Todo
+	err = cursor.All(c.Context(), &data)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"success": false,
+			"message": "Error  getting data",
+			"error":   err.Error(),
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"results": data,
+	})
+}
+
+//get data and limit when query condition fails
+func GetLimitedData(c *fiber.Ctx) error {
+	dataCollection := config.MI.DB.Collection("data")
+	options := options.Find()
+	query := bson.M{}
+	options.SetSort(bson.D{{"datetime", -1}})
+	options.SetLimit(10)
+	cursor, err := dataCollection.Find(c.Context(), query, options)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"success": false,
+			"message": "Something went wrong",
+			"error":   err.Error(),
+		})
+	}
+	var data []models.Data = make([]models.Data, 0)
 	err = cursor.All(c.Context(), &data)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -129,7 +195,7 @@ func GetAllData(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"success": true,
 		"results": data,
-		"length": len(data),
+		"length":  len(data),
 	})
 
 }
