@@ -26,19 +26,19 @@ type Device struct {
 	SensorClassName  string    `json:"sensor_class_name,omitempty"`
 	SensorClassId    string    `json:"sensor_class_id,omitempty"`
 
-	IsDeployed         bool `Json:"is_deployed,omitempty,omitempty"`
-	HasGeolocationData bool `Json:"has_geolocation_data,omitempty"`
+	IsDeployed         bool `json:"is_deployed,omitempty"`
+	HasGeolocationData bool `json:"has_geolocation_data,omitempty"`
 
 	ClientDetails []struct {
-		Name      string `Json:"name"`
-		Email     string `Json:"email"`
-		Phone     string `Json:"phone"`
-		CanGetSms bool   `Json:"can_get_sms"`
-	} `Json:"client_details"`
+		Name      string `json:"name"`
+		Email     string `json:"email"`
+		Phone     string `json:"phone"`
+		CanGetSms bool   `json:"can_get_sms"`
+	} `json:"client_details"`
 	Geolocation struct{
-		Lat string `Json:"lat,omitempty"`
-		Lon string `Json:"lon,omitempty"`
-	} `Json:"geolocation,omitempty"`
+		Lat string `json:"lat,omitempty"`
+		Lon string `json:"lon,omitempty"`
+	} `json:"geolocation,omitempty"`
 }
 
 
