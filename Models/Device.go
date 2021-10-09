@@ -2,13 +2,14 @@ package models
 
 import (
 	"time"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 //Device model
 
 type Device struct {
-	ID               string    `json:"id,omitempty" bson:"_id,omitempty"`
-	DeviceAddress    string    `json:"device_address,omitempty"`
+	ID               primitive.ObjectID    `json:"id,omitempty" bson:"_id,omitempty" swaggerignore:"true"`
+	DeviceAddress    string    `json:"device_address,omitempty" validate:"required"`
 	DeviceAlias      string    `json:"device_alias,omitempty"`
 	LocationName     string    `json:"location_name,omitempty"`
 	LocationId       string    `json:"location_id,omitempty"`
@@ -19,8 +20,8 @@ type Device struct {
 	PhysicalLocation string    `json:"physical_location,omitempty"`
 	CreatedByEmail   string    `json:"created_by_email,omitempty"`
 	CreatedById      string    `json:"created_by_id,omitempty"`
-	CreatedAt        time.Time `json:"created_at,omitempty"`
-	UpdatedAt        time.Time `json:"updated_at,omitempty"`
+	CreatedAt        time.Time `json:"createdAt" swaggertype:"primitive,integer" swaggerignore:"true"`
+	UpdatedAt        time.Time `json:"updatedAt" swaggertype:"primitive,integer" swaggerignore:"true"`
 	SensorTypeName   string    `json:"sensor_type_name,omitempty"`
 	SensorTypeId     string    `json:"sensor_type_id,omitempty"`
 	SensorClassName  string    `json:"sensor_class_name,omitempty"`

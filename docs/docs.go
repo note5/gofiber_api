@@ -26,6 +26,115 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/data/": {
+            "get": {
+                "description": "Get all Devices",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Data End Points"
+                ],
+                "summary": "Get all Data",
+                "operationId": "get-all-data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Start Date",
+                        "name": "start_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End Date",
+                        "name": "end_date",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Device"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/data/create": {
+            "post": {
+                "description": "Save device data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Data End Points"
+                ],
+                "summary": "Save device data",
+                "operationId": "create-data",
+                "parameters": [
+                    {
+                        "description": "Data Details",
+                        "name": "Data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Data"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
         "/api/devices/": {
             "get": {
                 "description": "Get all Devices",
@@ -84,7 +193,165 @@ var doc = `{
                 "operationId": "create-device",
                 "parameters": [
                     {
-                        "description": "Device details",
+                        "description": "Device Details",
+                        "name": "device",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Device"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Device"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/devices/{id}": {
+            "get": {
+                "description": "Get device by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Devices End Points"
+                ],
+                "summary": "Get device by id",
+                "operationId": "get-one-device",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Device Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Device"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete device by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Devices End Points"
+                ],
+                "summary": "Delete device by id",
+                "operationId": "delete-one-device",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Device Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Device"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update device by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Devices End Points"
+                ],
+                "summary": "Update device by id",
+                "operationId": "update-one-device",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Device Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Device Details",
                         "name": "device",
                         "in": "body",
                         "required": true,
@@ -123,8 +390,104 @@ var doc = `{
         }
     },
     "definitions": {
+        "models.Data": {
+            "type": "object",
+            "required": [
+                "device_address"
+            ],
+            "properties": {
+                "created_by_id": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "datetime": {
+                                "type": "string"
+                            },
+                            "geolocation": {
+                                "type": "object",
+                                "properties": {
+                                    "lat": {
+                                        "type": "string"
+                                    },
+                                    "lon": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "processed_value": {
+                                "type": "string"
+                            },
+                            "raw_value": {
+                                "type": "string"
+                            },
+                            "unit_string": {
+                                "type": "string"
+                            },
+                            "units": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "datetime": {
+                    "type": "string"
+                },
+                "device_address": {
+                    "type": "string"
+                },
+                "device_alias": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "type": "string"
+                },
+                "group_name": {
+                    "type": "string"
+                },
+                "has_geolocation_data": {
+                    "type": "boolean"
+                },
+                "is_deployed": {
+                    "type": "boolean"
+                },
+                "location_id": {
+                    "type": "string"
+                },
+                "location_name": {
+                    "type": "string"
+                },
+                "owner_id": {
+                    "type": "string"
+                },
+                "owner_name": {
+                    "type": "string"
+                },
+                "physical_location": {
+                    "type": "string"
+                },
+                "sensor_class_id": {
+                    "type": "string"
+                },
+                "sensor_class_name": {
+                    "type": "string"
+                },
+                "sensor_type_id": {
+                    "type": "string"
+                },
+                "sensor_type_name": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Device": {
             "type": "object",
+            "required": [
+                "device_address"
+            ],
             "properties": {
                 "client_details": {
                     "type": "array",
@@ -145,9 +508,6 @@ var doc = `{
                             }
                         }
                     }
-                },
-                "created_at": {
-                    "type": "string"
                 },
                 "created_by_email": {
                     "type": "string"
@@ -181,9 +541,6 @@ var doc = `{
                 "has_geolocation_data": {
                     "type": "boolean"
                 },
-                "id": {
-                    "type": "string"
-                },
                 "is_deployed": {
                     "type": "boolean"
                 },
@@ -212,9 +569,6 @@ var doc = `{
                     "type": "string"
                 },
                 "sensor_type_name": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }

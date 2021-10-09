@@ -68,6 +68,7 @@ func setupRoutes(app *fiber.App) {
 	})
 	// connect device routes
 	routes.DeviceRoute(api.Group("/devices"))
+	routes.DataRoute(api.Group("/data"))
 }
 
 type HTTPError struct {

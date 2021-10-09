@@ -2,19 +2,19 @@ package controllers
 
 import (
 	"fmt"
-	
 	"time"
     "github.com/gofiber/fiber/v2"
     "teleops/models"
     "teleops/config"
-    "go.mongodb.org/mongo-driver/bson" // new
-    // "go.mongodb.org/mongo-driver/bson/primitive" // nw
-    // "go.mongodb.org/mongo-driver/mongo" // new
+    "go.mongodb.org/mongo-driver/bson" 
+    "go.mongodb.org/mongo-driver/bson/primitive" 
+    "go.mongodb.org/mongo-driver/mongo"
 )
 
 
 
-// get all devices
+// Get all devices
+
 func GetDevices(c *fiber.Ctx) error {
 	deviceCollection := config.MI.DB.Collection("devices")
 
@@ -49,6 +49,8 @@ func GetDevices(c *fiber.Ctx) error {
     })
 }
 
+//Create Device
+
 func CreateDevice(c *fiber.Ctx) error{
 	deviceCollection := config.MI.DB.Collection("devices")
     
@@ -64,7 +66,7 @@ func CreateDevice(c *fiber.Ctx) error{
 			"error":err,
 		})
 	}
-	
+	fmt.Print("=========== ID===========", data.ID)
 	data.CreatedAt = time.Now()
 	data.UpdatedAt = time.Now()
 
@@ -91,3 +93,125 @@ func CreateDevice(c *fiber.Ctx) error{
 	})
 
 	}
+
+//Get One Device
+
+func GetDevice(c *fiber.Ctx) error {
+	deviceCollection := config.MI.DB.Collection("devices")
+	// get parameter value
+	paramID := c.Params("id")
+	// convert parameterID to objectId
+	id, err := primitive.ObjectIDFromHex(paramID)
+
+	// if error while parsing paramID
+if err != nil {
+	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	"success": false,
+	"message": "Cannot parse Id",
+	"error":   err,
+	})
+}
+
+//find device 
+device := &models.Device{}
+query := bson.D{{Key: "_id", Value: id}}
+err = deviceCollection.FindOne(c.Context(),query).Decode(device)
+if err != nil {
+	return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+		"success": false,
+		"message": "Device Not found",
+		"error":   err,
+	})
+}
+return c.Status(fiber.StatusOK).JSON(fiber.Map{
+	"success": true,
+	"results":device,
+})
+
+}
+
+//Delete device
+
+func  DeleteDevice(c *fiber.Ctx) error  {
+
+	deviceCollection := config.MI.DB.Collection("devices")
+	// get param
+    paramID := c.Params("id")
+	// convert parameter to object id
+    id, err := primitive.ObjectIDFromHex(paramID)
+	// if parameter cannot parse
+    if err != nil {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+            "success": false,
+            "message": "Cannot parse id",
+            "error":   err,
+        })
+    }
+	// find and delete todo
+    query := bson.D{{Key: "_id", Value: id}}
+	err = deviceCollection.FindOneAndDelete(c.Context(), query).Err()
+	if err != nil {
+        if err == mongo.ErrNoDocuments {
+            return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+                "success": false,
+                "message": "Device Not found",
+                "error":   err,
+            })
+        }
+
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+            "success": false,
+            "message": "Cannot delete todo",
+            "error":   err,
+        })
+    }
+	return c.SendStatus(fiber.StatusNoContent)
+
+
+}
+
+//Update device
+func UpdateDevice(c *fiber.Ctx) error {
+	
+	deviceCollection := config.MI.DB.Collection("devices")
+	// get param
+    paramID := c.Params("id")
+	// convert parameter to object id
+    id, err := primitive.ObjectIDFromHex(paramID)
+	// if parameter cannot parse
+    if err != nil {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+            "success": false,
+            "message": "Cannot parse id",
+            "error":   err,
+        })
+    }
+
+	// var data Request
+    data := new(models.Device)
+    err = c.BodyParser(&data)
+	if err != nil {
+        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+            "success": false,
+            "message": "Cannot parse JSON",
+            "error":   err,
+        })
+    }
+	update := bson.M{
+        "$set": data,
+    }
+	_, err = deviceCollection.UpdateOne(c.Context(), bson.M{"_id": id}, update)
+    if err != nil {
+        return c.Status(500).JSON(fiber.Map{
+            "success": false,
+            "message": "Could not update Device",
+            "error":   err.Error(),
+        })
+    }
+    return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+        "success": true,
+        "message": "Device updated successfully",
+    })
+
+}
+

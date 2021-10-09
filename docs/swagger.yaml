@@ -1,5 +1,66 @@
 basePath: /
 definitions:
+  models.Data:
+    properties:
+      created_by_id:
+        type: string
+      data:
+        items:
+          properties:
+            datetime:
+              type: string
+            geolocation:
+              properties:
+                lat:
+                  type: string
+                lon:
+                  type: string
+              type: object
+            processed_value:
+              type: string
+            raw_value:
+              type: string
+            unit_string:
+              type: string
+            units:
+              type: string
+          type: object
+        type: array
+      datetime:
+        type: string
+      device_address:
+        type: string
+      device_alias:
+        type: string
+      group_id:
+        type: string
+      group_name:
+        type: string
+      has_geolocation_data:
+        type: boolean
+      is_deployed:
+        type: boolean
+      location_id:
+        type: string
+      location_name:
+        type: string
+      owner_id:
+        type: string
+      owner_name:
+        type: string
+      physical_location:
+        type: string
+      sensor_class_id:
+        type: string
+      sensor_class_name:
+        type: string
+      sensor_type_id:
+        type: string
+      sensor_type_name:
+        type: string
+    required:
+    - device_address
+    type: object
   models.Device:
     properties:
       client_details:
@@ -15,8 +76,6 @@ definitions:
               type: string
           type: object
         type: array
-      created_at:
-        type: string
       created_by_email:
         type: string
       created_by_id:
@@ -38,8 +97,6 @@ definitions:
         type: string
       has_geolocation_data:
         type: boolean
-      id:
-        type: string
       is_deployed:
         type: boolean
       location_id:
@@ -60,8 +117,8 @@ definitions:
         type: string
       sensor_type_name:
         type: string
-      updated_at:
-        type: string
+    required:
+    - device_address
     type: object
   utils.HTTPError:
     properties:
@@ -79,6 +136,78 @@ info:
   title: Teleops  API
   version: "2.0"
 paths:
+  /api/data/:
+    get:
+      consumes:
+      - application/json
+      description: Get all Devices
+      operationId: get-all-data
+      parameters:
+      - description: Start Date
+        in: query
+        name: start_date
+        type: string
+      - description: End Date
+        in: query
+        name: end_date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Device'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Get all Data
+      tags:
+      - Data End Points
+  /api/data/create:
+    post:
+      consumes:
+      - application/json
+      description: Save device data
+      operationId: create-data
+      parameters:
+      - description: Data Details
+        in: body
+        name: Data
+        required: true
+        schema:
+          $ref: '#/definitions/models.Data'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Save device data
+      tags:
+      - Data End Points
   /api/devices/:
     get:
       consumes:
@@ -107,6 +236,112 @@ paths:
       summary: Get all Devices
       tags:
       - Devices End Points
+  /api/devices/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete device by id
+      operationId: delete-one-device
+      parameters:
+      - description: Device Id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Device'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Delete device by id
+      tags:
+      - Devices End Points
+    get:
+      consumes:
+      - application/json
+      description: Get device by id
+      operationId: get-one-device
+      parameters:
+      - description: Device Id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Device'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Get device by id
+      tags:
+      - Devices End Points
+    patch:
+      consumes:
+      - application/json
+      description: Update device by id
+      operationId: update-one-device
+      parameters:
+      - description: Device Id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Device Details
+        in: body
+        name: device
+        required: true
+        schema:
+          $ref: '#/definitions/models.Device'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Device'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Update device by id
+      tags:
+      - Devices End Points
   /api/devices/create:
     post:
       consumes:
@@ -114,7 +349,7 @@ paths:
       description: Create a device
       operationId: create-device
       parameters:
-      - description: Device details
+      - description: Device Details
         in: body
         name: device
         required: true

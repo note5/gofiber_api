@@ -3,13 +3,15 @@ package routes
 import (
 	"github.com/gofiber/fiber/v2"
 	"teleops/controllers"
-	"teleops/services"
-	
+	"teleops/services"	
 )
 //main entry point for route
 func DeviceRoute(route fiber.Router) {
-	GetAllDevices(route )
-	CreateDevice(route )
+	GetAllDevices(route ) //get add devices
+	CreateDevice(route ) //create a new device
+	GetDevice(route) //get one device
+	DeleteDevice(route) //delete one device
+	UpdateDevice(route) //update one device
 	
 	}
 	
@@ -46,5 +48,54 @@ func CreateDevice(route fiber.Router){
 	route.Post("/create", services.CheckMiddleware, controllers.CreateDevice)
 }
 
+// Get One Device godoc
+// @Summary Get device by id
+// @ID get-one-device
+// @Description Get device by id
+// @Accept  json
+// @Produce  json
+// @Tags Devices End Points
+// @Param id path string true "Device Id" 
+// @Success 200 {object} models.Device
+// @Failure 400 {object} utils.HTTPError
+// @Failure 404 {object} utils.HTTPError
+// @Failure 500 {object} utils.HTTPError
+// @Router /api/devices/{id} [get]
+func  GetDevice(route fiber.Router)  {
+	route.Get("/:id", services.CheckMiddleware, controllers.GetDevice)
+}
+// Delete One Device godoc
+// @Summary Delete device by id
+// @ID delete-one-device
+// @Description Delete device by id
+// @Accept  json
+// @Produce  json
+// @Tags Devices End Points
+// @Param id path string true "Device Id" 
+// @Success 200 {object} models.Device
+// @Failure 400 {object} utils.HTTPError
+// @Failure 404 {object} utils.HTTPError
+// @Failure 500 {object} utils.HTTPError
+// @Router /api/devices/{id} [delete]
+func  DeleteDevice(route fiber.Router)  {
+	route.Delete("/:id", services.CheckMiddleware, controllers.DeleteDevice)
+}
+// Update One Device godoc
+// @Summary Update device by id
+// @ID update-one-device
+// @Description Update device by id
+// @Accept  json
+// @Produce  json
+// @Tags Devices End Points
+// @Param id path string true "Device Id" 
+// @param device body models.Device true  "Device Details"
+// @Success 200 {object} models.Device
+// @Failure 400 {object} utils.HTTPError
+// @Failure 404 {object} utils.HTTPError
+// @Failure 500 {object} utils.HTTPError
+// @Router /api/devices/{id} [patch]
+func  UpdateDevice(route fiber.Router)  {
+	route.Patch("/:id", services.CheckMiddleware, controllers.UpdateDevice)
+}
 
 
