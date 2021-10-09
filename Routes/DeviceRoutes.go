@@ -8,7 +8,7 @@ import (
 
 func DeviceRoute(route fiber.Router) {
 	route.Get("", controllers.GetDevices)
-     route.Post("/create", checkMiddle, controllers.CreateDevice)
+     route.Post("/create", checkMiddleware, controllers.CreateDevice)
 
 }
 
