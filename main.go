@@ -7,7 +7,18 @@ import (
 	"log"
 	"teleops/config"
 	"teleops/routes"
+    // Import Fiber Swagger
+    swagger "github.com/arsmn/fiber-swagger/v2"
+	_ "teleops/docs"
+		
 )
+// @title Teleops  API
+// @version 2.0
+// @description Teleops IOT server API
+// @contact.name API Support
+// @contact.email info@teleops.io
+// @host localhost:3000
+// @BasePath /
 
 func main() {
 	app := fiber.New()
@@ -33,6 +44,11 @@ func main() {
 }
 
 func setupRoutes(app *fiber.App) {
+		// Add endpoint to serve swagger documentation
+		app.Get("/swagger/*", swagger.New(swagger.Config{ // custom
+			URL:         "/swagger/doc.json",
+			DeepLinking: false,
+		}))
 
 	// give response when at /
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -52,4 +68,9 @@ func setupRoutes(app *fiber.App) {
 	})
 	// connect device routes
 	routes.DeviceRoute(api.Group("/devices"))
+}
+
+type HTTPError struct {
+	Status  string
+	Message string
 }
