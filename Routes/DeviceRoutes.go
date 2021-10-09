@@ -12,6 +12,10 @@ func DeviceRoute(route fiber.Router) {
 
 }
 
-func checkMiddle(){
-	fmt.Print("======== MIDDLEWARE RUNS======")
+//add custom middleware
+
+func checkMiddleware(c *fiber.Ctx) error {
+	fmt.Print("======== MIDDLEWARE RUNS======", string(c.Body()))
+	// c.Next()
+	return nil
 }
