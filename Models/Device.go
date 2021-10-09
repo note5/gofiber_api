@@ -34,11 +34,12 @@ type Device struct {
 		Email     string `json:"email"`
 		Phone     string `json:"phone"`
 		CanGetSms bool   `json:"can_get_sms"`
-	} `json:"client_details"`
-	Geolocation struct{
-		Lat string `json:"lat,omitempty"`
-		Lon string `json:"lon,omitempty"`
-	} `json:"geolocation,omitempty"`
+	} `json:"client_details" bson:"client_details"`
+	Geolocation GeolocationData `json:"geolocation"bson:"geolocation"`
 }
 
+type GeolocationData struct {
+	Lat string `json:"lat,omitempty"`
+	Lon string `json:"lon,omitempty"`
+} 
 
