@@ -71,7 +71,7 @@ func GetDevices(c *fiber.Ctx) error {
     if err != nil {
        return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
            "success": false,
-            "message": "Soething went wrong",
+            "message": "Something went wrong",
             "error":   err,
         })
     }
