@@ -1,5 +1,26 @@
 basePath: /
 definitions:
+  models.Company:
+    properties:
+      company_id:
+        type: string
+      company_name:
+        type: string
+      created_at:
+        type: string
+      created_by_email:
+        type: string
+      created_by_id:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
   models.Data:
     properties:
       created_at:
@@ -142,8 +163,110 @@ info:
     name: API Support
   description: Teleops IOT server API
   title: Teleops  API
-  version: "2.0"
+  version: "3.0"
 paths:
+  /api/companies/:
+    get:
+      consumes:
+      - application/json
+      description: Get all Companies
+      operationId: get-all-companies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Get all Companies
+      tags:
+      - Company End Points
+  /api/companies/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: Update company by id
+      operationId: update-one-company
+      parameters:
+      - description: Company Id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Company Details
+        in: body
+        name: Company_details
+        schema:
+          $ref: '#/definitions/models.Company'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Update company by id
+      tags:
+      - Company End Points
+  /api/companies/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a device
+      operationId: create-company
+      parameters:
+      - description: Company Details
+        in: body
+        name: device
+        required: true
+        schema:
+          $ref: '#/definitions/models.Company'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Create a Company
+      tags:
+      - Company End Points
   /api/data/:
     get:
       consumes:

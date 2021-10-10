@@ -20,26 +20,26 @@ type Device struct {
 	PhysicalLocation string    `json:"physical_location,omitempty" bson:"physical_location"`
 	CreatedByEmail   string    `json:"created_by_email,omitempty" bson:"created_by_email"`
 	CreatedById      string    `json:"created_by_id,omitempty" bson:"created_by_id"`
-	CreatedAt        time.Time `json:"created_at" bson:"created_at"  swaggerignore:"true" `
-	UpdatedAt        time.Time `json:"updated_at" bson:"updated_at"  swaggerignore:"true"`
+	CreatedAt        time.Time `json:"created_at,omitempty" bson:"created_at"  swaggerignore:"true" `
+	UpdatedAt        time.Time `json:"updated_at,omitempty" bson:"updated_at"  swaggerignore:"true"`
 	SensorTypeName   string    `json:"sensor_type_name,omitempty" bson:"sensor_type_name"`
 	SensorTypeId     string    `json:"sensor_type_id,omitempty" bson:"sensor_type_id"`
 	SensorClassName  string    `json:"sensor_class_name,omitempty" bson:"sensor_class_name"`
 	SensorClassId    string    `json:"sensor_class_id,omitempty" bson:"sensor_class_id"`
 
-	IsDeployed         bool `json:"is_deployed,omitempty" bson:"is_deployed"`
-	HasGeolocationData bool `json:"has_geolocation_data,omitempty" bson:"has_geolocation_data"`
+	IsDeployed         *bool `json:"is_deployed,omitempty" bson:"is_deployed"`
+	HasGeolocationData *bool `json:"has_geolocation_data,omitempty" bson:"has_geolocation_data"`
 
 	ClientDetails []struct {
-		Name      string `json:"name"`
-		Email     string `json:"email"`
-		Phone     string `json:"phone"`
-		CanGetSms bool   `json:"can_get_sms" bson:"can_get_sms"`
-	} `json:"client_details" bson:"client_details"`
+		Name      string `json:"name,omitempty"`
+		Email     string `json:"email,omitempty"`
+		Phone     string `json:"phone,omitempty"`
+		CanGetSms bool   `json:"can_get_sms,omitempty" bson:"can_get_sms"`
+	} `json:"client_details,omitempty" bson:"client_details"`
 	Geolocation struct {
 		Lat string `json:"lat,omitempty"`
 		Lon string `json:"lon,omitempty"`
-	}  `json:"geolocation"bson:"geolocation"`
+	}  `json:"geolocation,omitempty"bson:"geolocation"`
 }
 
 

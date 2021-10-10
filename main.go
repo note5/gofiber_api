@@ -15,7 +15,7 @@ import (
 		
 )
 // @title Teleops  API
-// @version 2.0
+// @version 3.0
 // @description Teleops IOT server API
 // @contact.name API Support
 // @contact.email info@teleops.io
@@ -74,6 +74,7 @@ func setupRoutes(app *fiber.App) {
 	// connect device routes
 	routes.DeviceRoute(api.Group("/devices"))
 	routes.DataRoute(api.Group("/data"))
+	routes.CompanyRoute(api.Group("/companies"))
 }
 
 type HTTPError struct {

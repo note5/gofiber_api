@@ -8,7 +8,7 @@ import (
 //add custom middleware
 
 func CheckMiddleware(c *fiber.Ctx) error {
-	fmt.Print("======== MIDDLEWARE RUNS======", string(c.Body()))
+	fmt.Print("======== MIDDLEWARE RUNS======")
 	c.Next()
 	return nil
 }

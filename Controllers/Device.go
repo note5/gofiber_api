@@ -11,44 +11,7 @@ import (
 	"time"
 )
 
-// Get all devices
-
-func GetDevices(c *fiber.Ctx) error {
-	deviceCollection := config.MI.DB.Collection("devices")
-
-	// Query to filter
-	query := bson.D{{}}
-
-	cursor, err := deviceCollection.Find(c.Context(), query)
-
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"success": false,
-			"message": "Something went wrong",
-			"error":   err,
-		})
-	}
-
-	var devices []models.Device = make([]models.Device, 0)
-
-	// iterate the cursor anddecode each item into a Todo
-	err = cursor.All(c.Context(), &devices)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"success": false,
-			"message": "Something went wrong",
-			"error":   err,
-		})
-	}
-
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"success": true,
-		"results": devices,
-	})
-}
-
 //Create Device
-
 func CreateDevice(c *fiber.Ctx) error {
 	deviceCollection := config.MI.DB.Collection("devices")
 
@@ -90,6 +53,42 @@ func CreateDevice(c *fiber.Ctx) error {
 		"result":  device,
 	})
 
+}
+
+// Get all devices
+
+func GetDevices(c *fiber.Ctx) error {
+	deviceCollection := config.MI.DB.Collection("devices")
+
+	// Query to filter
+	query := bson.D{{}}
+
+	cursor, err := deviceCollection.Find(c.Context(), query)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"success": false,
+			"message": "Something went wrong",
+			"error":   err,
+		})
+	}
+
+	var devices []models.Device = make([]models.Device, 0)
+
+	// iterate the cursor anddecode each item into a Todo
+	err = cursor.All(c.Context(), &devices)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"success": false,
+			"message": "Something went wrong",
+			"error":   err,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
+		"results": devices,
+	})
 }
 
 //Get One Device
@@ -194,6 +193,7 @@ func UpdateDevice(c *fiber.Ctx) error {
 			"error":   err,
 		})
 	}
+	data.UpdatedAt = time.Now()
 	update := bson.M{
 		"$set": data,
 	}

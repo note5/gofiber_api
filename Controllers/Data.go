@@ -114,10 +114,20 @@ func GetAllData(c *fiber.Ctx) error {
 
 //Get data by more params like datetime range and id or device_alias
 func GetDataByParams(c *fiber.Ctx) error {
+
+	//check if start date and end date are not empty
+ if c.Query("start_date") == "" ||  c.Query("end_date") == "" {
+	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		"success": false,
+		"message": "Start and End dates are required",
+	})
+ }
+//get the collection in mongodb
 	dataCollection := config.MI.DB.Collection("data")
-	//
+	//query options
 	options := options.Find()
-	options.SetSort(bson.D{{"datetime", -1}})
+	options.SetSort(bson.D{{"datetime", -1}}) // arrange the data in descending order 
+	
 	startDate, err := time.Parse(time.RFC3339, strings.TrimSpace(c.Query("start_date"))) //get start_date
 	if err != nil {
 		fmt.Println(err)
@@ -130,8 +140,8 @@ func GetDataByParams(c *fiber.Ctx) error {
 	endDate, err := time.Parse(time.RFC3339, strings.TrimSpace(c.Query("end_date")))
 	//split the parameters by , to get a slice
 	params := strings.Split(strings.TrimSpace(c.Query("params")), ",")
-	param := strings.TrimSpace(c.Query("param"))
-	owner_id := strings.TrimSpace(c.Query("owner_id"))
+	param := strings.TrimSpace(c.Query("param")) //get param
+	owner_id := strings.TrimSpace(c.Query("owner_id")) //get owner id
 	if err != nil {
 		fmt.Println(err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -146,9 +156,9 @@ func GetDataByParams(c *fiber.Ctx) error {
             "$lt": endDate,
         },
 		"owner_id": owner_id,
-        param:bson.M{"$in": params},
+        // param:bson.M{"$in": params},
     }
-	fmt.Println(" Query ", params)
+	fmt.Println(param," Query ", params)
 	cursor, err := dataCollection.Find(c.Context(), query)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

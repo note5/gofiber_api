@@ -20,26 +20,26 @@ type Data struct {
 	PhysicalLocation string    `json:"physical_location,omitempty" bson:"physical_location"`
 	CreatedByEmail   string    `json:"created_by_email,omitempty" bson:"created_by_email"`
 	CreatedById      string    `json:"created_by_id,omitempty" bson:"created_by_id"`
-	CreatedAt        time.Time `json:"created_at" bson:"created_at" swaggertype:"primitive,integer" swaggerignore:"true " `
-	UpdatedAt        time.Time `json:"updated_at" bson:"updated_at" swaggertype:"primitive,integer" swaggerignore:"true"`
+	CreatedAt        time.Time `json:"created_at,omitempty" bson:"created_at" swaggertype:"primitive,integer" swaggerignore:"true " `
+	UpdatedAt        time.Time `json:"updated_at,omitempty" bson:"updated_at" swaggertype:"primitive,integer" swaggerignore:"true"`
 	SensorTypeName   string    `json:"sensor_type_name,omitempty" bson:"sensor_type_name"`
 	SensorTypeId     string    `json:"sensor_type_id,omitempty" bson:"sensor_type_id"`
 	SensorClassName  string    `json:"sensor_class_name,omitempty" bson:"sensor_class_name"`
 	SensorClassId    string    `json:"sensor_class_id,omitempty" bson:"sensor_class_id"`
-	IsDeployed         bool `json:"is_deployed,omitempty" bson:"is_deployed"`
-	HasGeolocationData bool `json:"has_geolocation_data,omitempty" bson:"has_geolocation_data"`
-	Datetime           time.Time          `json:"datetime"  bson:"datetime"`
+	IsDeployed         *bool `json:"is_deployed,omitempty" bson:"is_deployed"`
+	HasGeolocationData *bool `json:"has_geolocation_data,omitempty" bson:"has_geolocation_data"`
+	Datetime           time.Time          `json:"datetime,omitempty"  bson:"datetime"`
 
 	Data []struct {
-		Parameter string `json:"parameter" bson:"parameter"`
-		Datetime       string `json:"datetime" bson:"datetime"`
-		ProcessedValue string `json:"processed_value" bson:"processed_value"`
-		RawValue       string `json:"raw_value" bson:"raw_value"`
+		Parameter string `json:"parameter,omitempty" bson:"parameter"`
+		Datetime       string `json:"datetime,omitempty" bson:"datetime"`
+		ProcessedValue string `json:"processed_value,omitempty" bson:"processed_value"`
+		RawValue       string `json:"raw_value,omitempty" bson:"raw_value"`
 		Geolocation    struct {
-			Lat string `json:"lat"`
-			Lon string `json:"lon"`
-		} `json:"geolocation" bson:"geolocation"`
-		Units      string `json:"units" bson:"units"`
-		UnitString string `json:"unit_string" bson:"unit_string"`
+			Lat string `json:"lat,omitempty"`
+			Lon string `json:"lon,omitempty"`
+		} `json:"geolocation,omitempty" bson:"geolocation"`
+		Units      string `json:"units,omitempty" bson:"units"`
+		UnitString string `json:"unit_string,omitempty" bson:"unit_string"`
 	}
 }
