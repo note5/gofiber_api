@@ -60,8 +60,7 @@ func GetAllData(route fiber.Router){
 // @Produce  json
 // @Param start_date query string false "Start Date"
 // @Param end_date query string false "End Date"
-// @Param param query string false "params"
-// @Param params query string false "Params"
+// @Param device_addresses query string false "Comma seperated device addresses"
 // @Tags Data End Points
 // @Success 200 {object} models.Data
 // @Failure 400 {object} utils.HTTPError

@@ -164,14 +164,8 @@ var doc = `{
                     },
                     {
                         "type": "string",
-                        "description": "params",
-                        "name": "param",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Params",
-                        "name": "params",
+                        "description": "Comma seperated device addresses",
+                        "name": "device_addresses",
                         "in": "query"
                     }
                 ],

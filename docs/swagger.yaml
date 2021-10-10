@@ -265,13 +265,9 @@ paths:
         in: query
         name: end_date
         type: string
-      - description: params
+      - description: Comma seperated device addresses
         in: query
-        name: param
-        type: string
-      - description: Params
-        in: query
-        name: params
+        name: device_addresses
         type: string
       produces:
       - application/json

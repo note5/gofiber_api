@@ -118,7 +118,7 @@ func GetDataByParams(c *fiber.Ctx) error {
 	//
 	options := options.Find()
 	options.SetSort(bson.D{{"datetime", -1}})
-	startDate, err := time.Parse(time.RFC3339, c.Query("start_date")) //get start_date
+	startDate, err := time.Parse(time.RFC3339, strings.TrimSpace(c.Query("start_date"))) //get start_date
 	if err != nil {
 		fmt.Println(err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -127,10 +127,11 @@ func GetDataByParams(c *fiber.Ctx) error {
 			"error":   err,
 		})
 	}
-	endDate, err := time.Parse(time.RFC3339, c.Query("end_date"))
+	endDate, err := time.Parse(time.RFC3339, strings.TrimSpace(c.Query("end_date")))
 	//split the parameters by , to get a slice
-	params := strings.Split(c.Query("params"), ",")
-	
+	params := strings.Split(strings.TrimSpace(c.Query("params")), ",")
+	param := strings.TrimSpace(c.Query("param"))
+	owner_id := strings.TrimSpace(c.Query("owner_id"))
 	if err != nil {
 		fmt.Println(err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -144,7 +145,8 @@ func GetDataByParams(c *fiber.Ctx) error {
             "$gt": startDate,
             "$lt": endDate,
         },
-        "device_address":bson.M{"$in": params},
+		"owner_id": owner_id,
+        param:bson.M{"$in": params},
     }
 	fmt.Println(" Query ", params)
 	cursor, err := dataCollection.Find(c.Context(), query)
