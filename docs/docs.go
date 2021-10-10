@@ -28,7 +28,7 @@ var doc = `{
     "paths": {
         "/api/data/": {
             "get": {
-                "description": "Get all Devices",
+                "description": "Get all Data",
                 "consumes": [
                     "application/json"
                 ],
@@ -58,7 +58,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Device"
+                            "$ref": "#/definitions/models.Data"
                         }
                     },
                     "400": {
@@ -82,7 +82,7 @@ var doc = `{
                 }
             }
         },
-        "/api/data/create": {
+        "/api/data/create/": {
             "post": {
                 "description": "Save device data",
                 "consumes": [
@@ -105,6 +105,125 @@ var doc = `{
                         "schema": {
                             "$ref": "#/definitions/models.Data"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/data/filter": {
+            "get": {
+                "description": "Filter data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Data End Points"
+                ],
+                "summary": "Get all Data",
+                "operationId": "filter-data-by-params",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Start Date",
+                        "name": "start_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End Date",
+                        "name": "end_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "params",
+                        "name": "param",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Params",
+                        "name": "params",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/data/{id}": {
+            "delete": {
+                "description": "Delete data by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Data End Points"
+                ],
+                "summary": "Delete record by id",
+                "operationId": "delete-data-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -396,6 +515,12 @@ var doc = `{
                 "device_address"
             ],
             "properties": {
+                "created_at": {
+                    "type": "integer"
+                },
+                "created_by_email": {
+                    "type": "string"
+                },
                 "created_by_id": {
                     "type": "string"
                 },
@@ -417,6 +542,9 @@ var doc = `{
                                         "type": "string"
                                     }
                                 }
+                            },
+                            "parameter": {
+                                "type": "string"
                             },
                             "processed_value": {
                                 "type": "string"
@@ -509,9 +637,6 @@ var doc = `{
                         }
                     }
                 },
-                "created_at": {
-                    "type": "integer"
-                },
                 "created_by_email": {
                     "type": "string"
                 },
@@ -543,6 +668,9 @@ var doc = `{
                 },
                 "has_geolocation_data": {
                     "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
                 },
                 "is_deployed": {
                     "type": "boolean"

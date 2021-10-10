@@ -2,15 +2,14 @@ package controllers
 
 import (
 	"fmt"
+	"strings"
 	"teleops/config"
 	"teleops/models"
 	"time"
-
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
-
-	// 	"go.mongodb.org/mongo-driver/bson/primitive"
-	// 	"go.mongodb.org/mongo-driver/mongo"
+    "go.mongodb.org/mongo-driver/bson/primitive"
+    "go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -49,8 +48,14 @@ func SaveData(c *fiber.Ctx) error {
 //Get all data
 
 func GetAllData(c *fiber.Ctx) error {
-	dataCollection := config.MI.DB.Collection("data")                 //get the collection of the data
-	startDate, err := time.Parse(time.RFC3339, c.Query("start_date")) //get start_date
+	//check if we have start date if not just get limited entries
+	if  c.Query("start_date") =="" {
+		return GetLimitedData(c) 
+	}
+	//get the collection of the data
+	dataCollection := config.MI.DB.Collection("data")
+	//get start_date                 
+	 startDate, err := time.Parse(time.RFC3339, c.Query("start_date")) 
 	if err != nil {
 		fmt.Println(err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -108,11 +113,10 @@ func GetAllData(c *fiber.Ctx) error {
 }
 
 //Get data by more params like datetime range and id or device_alias
-
 func GetDataByParams(c *fiber.Ctx) error {
 	dataCollection := config.MI.DB.Collection("data")
+	//
 	options := options.Find()
-
 	options.SetSort(bson.D{{"datetime", -1}})
 	startDate, err := time.Parse(time.RFC3339, c.Query("start_date")) //get start_date
 	if err != nil {
@@ -124,6 +128,9 @@ func GetDataByParams(c *fiber.Ctx) error {
 		})
 	}
 	endDate, err := time.Parse(time.RFC3339, c.Query("end_date"))
+	//split the parameters by , to get a slice
+	params := strings.Split(c.Query("params"), ",")
+	
 	if err != nil {
 		fmt.Println(err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -132,14 +139,14 @@ func GetDataByParams(c *fiber.Ctx) error {
 			"error":   err,
 		})
 	}
-	aliases := []string {"000","111"}
 	query := bson.M{
         "datetime": bson.M{
             "$gt": startDate,
             "$lt": endDate,
         },
-        "device_alias":bson.M{"$in": aliases},
+        "device_address":bson.M{"$in": params},
     }
+	fmt.Println(" Query ", params)
 	cursor, err := dataCollection.Find(c.Context(), query)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -163,6 +170,44 @@ func GetDataByParams(c *fiber.Ctx) error {
 		"success": true,
 		"results": data,
 	})
+}
+
+//Delete data by id
+func DeleteData(c *fiber.Ctx) error {
+
+	Collection := config.MI.DB.Collection("data")
+	// get param
+	paramID := c.Params("id")
+	// convert parameter to object id
+	id, err := primitive.ObjectIDFromHex(paramID)
+	// if parameter cannot parse
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Cannot parse id",
+			"error":   err,
+		})
+	}
+	// find and delete todo
+	query := bson.D{{Key: "_id", Value: id}}
+	err = Collection.FindOneAndDelete(c.Context(), query).Err()
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"success": false,
+				"message": "Data Not found",
+				"error":   err,
+			})
+		}
+
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Cannot delete todo",
+			"error":   err,
+		})
+	}
+	return c.SendStatus(fiber.StatusNoContent)
+
 }
 
 //get data and limit when query condition fails

@@ -31,6 +31,7 @@ type Data struct {
 	Datetime           time.Time          `json:"datetime"  bson:"datetime"`
 
 	Data []struct {
+		Parameter string `json:"parameter" bson:"parameter"`
 		Datetime       string `json:"datetime" bson:"datetime"`
 		ProcessedValue string `json:"processed_value" bson:"processed_value"`
 		RawValue       string `json:"raw_value" bson:"raw_value"`

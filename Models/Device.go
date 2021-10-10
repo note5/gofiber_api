@@ -2,13 +2,13 @@ package models
 
 import (
 	"time"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	// "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 //Device model
 
 type Device struct {
-	ID               primitive.ObjectID    `json:"id,omitempty" bson:"_id,omitempty" swaggerignore:"true"`
+	ID               string    `json:"id,omitempty" bson:"_id,omitempty" `
 	DeviceAddress    string    `json:"device_address,omitempty" bson:"device_address" validate:"required"`
 	DeviceAlias      string    `json:"device_alias,omitempty" bson:"device_alias"`
 	LocationName     string    `json:"location_name,omitempty" bson:"location_name"`
@@ -20,8 +20,8 @@ type Device struct {
 	PhysicalLocation string    `json:"physical_location,omitempty" bson:"physical_location"`
 	CreatedByEmail   string    `json:"created_by_email,omitempty" bson:"created_by_email"`
 	CreatedById      string    `json:"created_by_id,omitempty" bson:"created_by_id"`
-	CreatedAt        time.Time `json:"created_at" bson:"created_at" swaggertype:"primitive,integer" swaggerignore:"true " `
-	UpdatedAt        time.Time `json:"updated_at" bson:"updated_at" swaggertype:"primitive,integer" swaggerignore:"true"`
+	CreatedAt        time.Time `json:"created_at" bson:"created_at"  swaggerignore:"true" `
+	UpdatedAt        time.Time `json:"updated_at" bson:"updated_at"  swaggerignore:"true"`
 	SensorTypeName   string    `json:"sensor_type_name,omitempty" bson:"sensor_type_name"`
 	SensorTypeId     string    `json:"sensor_type_id,omitempty" bson:"sensor_type_id"`
 	SensorClassName  string    `json:"sensor_class_name,omitempty" bson:"sensor_class_name"`

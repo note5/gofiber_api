@@ -2,6 +2,10 @@ basePath: /
 definitions:
   models.Data:
     properties:
+      created_at:
+        type: integer
+      created_by_email:
+        type: string
       created_by_id:
         type: string
       data:
@@ -16,6 +20,8 @@ definitions:
                 lon:
                   type: string
               type: object
+            parameter:
+              type: string
             processed_value:
               type: string
             raw_value:
@@ -76,8 +82,6 @@ definitions:
               type: string
           type: object
         type: array
-      created_at:
-        type: integer
       created_by_email:
         type: string
       created_by_id:
@@ -99,6 +103,8 @@ definitions:
         type: string
       has_geolocation_data:
         type: boolean
+      id:
+        type: string
       is_deployed:
         type: boolean
       location_id:
@@ -142,7 +148,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get all Devices
+      description: Get all Data
       operationId: get-all-data
       parameters:
       - description: Start Date
@@ -159,7 +165,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Device'
+            $ref: '#/definitions/models.Data'
         "400":
           description: Bad Request
           schema:
@@ -175,7 +181,41 @@ paths:
       summary: Get all Data
       tags:
       - Data End Points
-  /api/data/create:
+  /api/data/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete data by id
+      operationId: delete-data-by-id
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Delete record by id
+      tags:
+      - Data End Points
+  /api/data/create/:
     post:
       consumes:
       - application/json
@@ -208,6 +248,51 @@ paths:
           schema:
             $ref: '#/definitions/utils.HTTPError'
       summary: Save device data
+      tags:
+      - Data End Points
+  /api/data/filter:
+    get:
+      consumes:
+      - application/json
+      description: Filter data
+      operationId: filter-data-by-params
+      parameters:
+      - description: Start Date
+        in: query
+        name: start_date
+        type: string
+      - description: End Date
+        in: query
+        name: end_date
+        type: string
+      - description: params
+        in: query
+        name: param
+        type: string
+      - description: Params
+        in: query
+        name: params
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Get all Data
       tags:
       - Data End Points
   /api/devices/:
