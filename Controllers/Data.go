@@ -25,8 +25,9 @@ func SaveData(c *fiber.Ctx) error {
 			"error":   err,
 		})
 	}
-	data.CreatedAt = time.Now()
-	data.UpdatedAt = time.Now()
+	time :=time.Now()
+	data.CreatedAt = &time
+	data.UpdatedAt = &time
 
 	result, err := dataCollection.InsertOne(c.Context(), data)
 	if err != nil {

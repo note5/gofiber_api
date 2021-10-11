@@ -70,7 +70,7 @@ var doc = `{
         },
         "/api/companies/create": {
             "post": {
-                "description": "Create a device",
+                "description": "Create a company",
                 "consumes": [
                     "application/json"
                 ],
@@ -85,7 +85,7 @@ var doc = `{
                 "parameters": [
                     {
                         "description": "Company Details",
-                        "name": "device",
+                        "name": "company",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -122,6 +122,55 @@ var doc = `{
             }
         },
         "/api/companies/{id}": {
+            "delete": {
+                "description": "Delete company by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Company End Points"
+                ],
+                "summary": "Delete company by id",
+                "operationId": "delete-one-company",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Company Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Company"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    }
+                }
+            },
             "patch": {
                 "description": "Update company by id",
                 "consumes": [
@@ -659,6 +708,9 @@ var doc = `{
     "definitions": {
         "models.Company": {
             "type": "object",
+            "required": [
+                "id"
+            ],
             "properties": {
                 "company_id": {
                     "type": "string"

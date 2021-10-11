@@ -11,6 +11,7 @@ func CompanyRoute(route fiber.Router) {
 	CreateCompany(route) //create a new company
 	GetCompanies(route) //get all companies
 	UpdateCompany(route) //update company
+	DeleteCompany(route) //update company
 
 
 }
@@ -18,11 +19,11 @@ func CompanyRoute(route fiber.Router) {
 // Create Company godoc
 // @Summary Create a Company
 // @ID create-company
-// @Description  Create a device
+// @Description  Create a company
 // @Accept  json
 // @Produce  json
 // @Tags Company End Points
-// @param device body models.Company true  "Company Details"
+// @param company body models.Company true  "Company Details"
 // @Success 200 {object} models.Company
 // @Failure 400 {object} utils.HTTPError
 // @Failure 404 {object} utils.HTTPError
@@ -66,4 +67,21 @@ func GetCompanies(route fiber.Router){
 // @Router /api/companies/{id} [patch]
 func  UpdateCompany(route fiber.Router)  {
 	route.Patch("/:id", services.CheckMiddleware, controllers.UpdateCompany)
+}
+
+// Delete One Company godoc
+// @Summary Delete company by id
+// @ID delete-one-company
+// @Description Delete company by id
+// @Accept  json
+// @Produce  json
+// @Tags Company End Points
+// @Param id path string true "Company Id" 
+// @Success 200 {object} models.Company
+// @Failure 400 {object} utils.HTTPError
+// @Failure 404 {object} utils.HTTPError
+// @Failure 500 {object} utils.HTTPError
+// @Router /api/companies/{id} [delete]
+func  DeleteCompany(route fiber.Router)  {
+	route.Delete("/:id", services.CheckMiddleware, controllers.DeleteCompany)
 }

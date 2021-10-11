@@ -27,10 +27,10 @@ func CreateDevice(c *fiber.Ctx) error {
 			"error":   err,
 		})
 	}
-	fmt.Print("=========== ID===========", data.ID)
+	time :=time.Now()
     data.ID = ""
-	data.CreatedAt = time.Now()
-	data.UpdatedAt = time.Now()
+	data.CreatedAt = &time
+	data.UpdatedAt = &time
 
 	result, err := deviceCollection.InsertOne(c.Context(), data)
 	if err != nil {
@@ -92,7 +92,6 @@ func GetDevices(c *fiber.Ctx) error {
 }
 
 //Get One Device
-
 func GetDevice(c *fiber.Ctx) error {
 	deviceCollection := config.MI.DB.Collection("devices")
 	// get parameter value
@@ -158,7 +157,7 @@ func DeleteDevice(c *fiber.Ctx) error {
 
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
-			"message": "Cannot delete todo",
+			"message": "Cannot delete device",
 			"error":   err,
 		})
 	}
@@ -184,7 +183,7 @@ func UpdateDevice(c *fiber.Ctx) error {
 	}
 
 	// var data Request
-	data := new(models.Device)
+	data := new(models.DeviceUpdate)
 	err = c.BodyParser(&data)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -193,7 +192,8 @@ func UpdateDevice(c *fiber.Ctx) error {
 			"error":   err,
 		})
 	}
-	data.UpdatedAt = time.Now()
+	time :=time.Now()
+	data.UpdatedAt = &time
 	update := bson.M{
 		"$set": data,
 	}

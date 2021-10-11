@@ -6,6 +6,7 @@ require (
 	github.com/andybalholm/brotli v1.0.3 // indirect
 	github.com/arsmn/fiber-swagger/v2 v2.17.0
 	github.com/go-openapi/spec v0.20.4 // indirect
+	github.com/go-playground/validator/v10 v10.9.0 // indirect
 	github.com/gofiber/fiber/v2 v2.20.1
 	github.com/joho/godotenv v1.4.0
 	github.com/mailru/easyjson v0.7.7 // indirect
